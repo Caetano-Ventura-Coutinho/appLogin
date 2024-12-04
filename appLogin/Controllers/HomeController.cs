@@ -1,4 +1,6 @@
+using appLogin.Libraries.Login;
 using appLogin.Models;
+using appLogin.Repository.Contract;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -6,18 +8,42 @@ namespace appLogin.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private IClienteRepository _clienteRepository;
+        private LoginCliente _loginCliente;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController (IClienteRepository clienteRepository, LoginCliente loginCliente)
         {
-            _logger = logger;
+            _clienteRepository = clienteRepository;
+            _loginCliente = loginCliente;
         }
 
         public IActionResult Index()
         {
             return View();
         }
-
+        [HttpPost]
+        public IActionResult Login([FromForm] Cliente cliente)
+        {
+            Cliente clienteDB = _clienteRepository.Login(cliente.Email, cliente.Senha);
+            if (clienteDB.Email != null && clienteDB.Senha != null)
+            {
+                _loginCliente.Login(clienteDB);
+                return new RedirectResult(Url.Action(nameof(PainelCliente)));
+            }
+            else
+            {
+                ViewData["MSG_E"] = "Usuário não localizado, por favor verifique o email e senha digitado";
+                return View();
+            }
+        }
+        public IActionResult PainelCliente()
+        {
+            ViewBag.Nome = _loginCliente.GetCliente().Nome;
+            ViewBag.CPF = _loginCliente.GetCliente().CPF;
+            ViewBag.Email = _loginCliente.GetCliente().Email;
+            return View();
+        }
+        
         public IActionResult Privacy()
         {
             return View();
