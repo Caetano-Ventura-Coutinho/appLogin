@@ -16,8 +16,12 @@ namespace appLogin.Controllers
             _clienteRepository = clienteRepository;
             _loginCliente = loginCliente;
         }
-
         public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult Login()
         {
             return View();
         }
@@ -42,6 +46,12 @@ namespace appLogin.Controllers
             ViewBag.CPF = _loginCliente.GetCliente().CPF;
             ViewBag.Email = _loginCliente.GetCliente().Email;
             return View();
+        }
+
+        public IActionResult LogoutCliente()
+        {
+            _loginCliente.Logout();
+            return RedirectToAction(nameof(Index));
         }
         
         public IActionResult Privacy()

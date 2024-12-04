@@ -38,7 +38,7 @@ namespace appLogin.Repository
                 cmd.Parameters.Add("@Telefone", MySqlDbType.VarChar).Value = cliente.CPF;
                 cmd.Parameters.Add("@Email", MySqlDbType.VarChar).Value = cliente.Email;
                 cmd.Parameters.Add("@Senha", MySqlDbType.VarChar).Value = cliente.Senha;
-                cmd.Parameters.Add("@Situacao", MySqlDbType.VarChar).Value = cliente.Situacao;
+                cmd.Parameters.Add("@Situacao", MySqlDbType.VarChar).Value = Situacao;
 
                 cmd.ExecuteNonQuery();
                 conexao.Close();
